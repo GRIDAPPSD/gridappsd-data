@@ -12,7 +12,11 @@ RUN apt-get update \
     && rm -rf /var/cache/apt/archives/*  \
     && pip3 install -r /tmp/timeseries/weather/solar-forecasting/requirements.txt  \
     && cd /tmp/timeseries/weather/solar-forecasting \
-    && python3 build_bulk_load_file.py 
+    && python3 build_bulk_load_file.py  \
+    && egrep -v "DATE=\"[6789]" ghi_dhi_bulkload.txt > ghi_dhi_bulkload.txt.tmp \
+    && mv ghi_dhi_bulkload.txt.tmp ghi_dhi_bulkload.txt \
+    && python3 build_bulk_load_file_modified.py  \
+    && cat ghi_dhi_bulkload_modified.txt >> ghi_dhi_bulkload.txt
 
 FROM influxdb:latest 
 
