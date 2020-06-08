@@ -8,7 +8,7 @@ import time
 import os
 
 raw_input_file = "ieeezipload.player"
-measurement = "loadprofile"
+measurement = "ieeezipload"
 bulk_load_output_file = "loadprofile_measurement_out.txt"
 database = "proven"
 
