@@ -1,4 +1,4 @@
-FROM influxdb:latest AS influxdbbuild
+FROM influxdb:1.8 AS influxdbbuild
 
 ARG TIMESTAMP
 RUN echo $TIMESTAMP > /dockerbuildversion.txt
@@ -16,7 +16,7 @@ RUN apt-get update \
     && cd /tmp/timeseries/loadprofiles \
     && python3 loadprofile_measurement_bulk.py 
 
-FROM influxdb:latest 
+FROM influxdb:1.8 
 
 COPY --from=influxdbbuild /tmp/timeseries/weather/solar-forecasting/ghi_dhi_bulkload.txt /tmp/ghi_dhi_bulkload.txt
 COPY --from=influxdbbuild /tmp/timeseries/loadprofiles/loadprofile_measurement_out.txt /tmp/loadprofile_measurement_out.txt
