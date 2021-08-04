@@ -1,0 +1,161 @@
+on: [push]
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    name: Build and push the docker container
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Checking environment
+        env:
+          DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_IMAGE_NAME }}
+        run: |
+          if [ "x${{ env.DOCKER_IMAGE_NAME }}" == "x" ]; then
+            echo "Error: missing DOCKER_IMAGE_NAME"
+            exit 1
+          fi
+
+      - name: Log in to docker
+        run: |
+          if [ -n "${{ secrets.DOCKER_USERNAME }}" -a -n "${{ secrets.DOCKER_TOKEN }}" ]; then
+          
+            echo " "
+            echo "Connecting to docker"
+            echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+            status=$?
+            if [ $status -ne 0 ]; then
+              echo "Error: status $status"
+              exit 1
+            fi
+          fi
+          
+      - name: Build the image
+        env:
+          DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_IMAGE_NAME }}
+        if: env.DOCKER_IMAGE_NAME != null
+        run: |
+          TAG="${GITHUB_REF##*/}"
+          ORG=`echo "${{ secrets.DOCKER_PROJECT }}" | tr '[:upper:]' '[:lower:]'`
+          ORG="${ORG:-gridappsd}"
+          ORG="${ORG:+${ORG}/}"
+          IMAGE="${ORG}${{ env.DOCKER_IMAGE_NAME }}"
+          TIMESTAMP=`date +'%y%m%d%H'`
+          GITHASH=`git log -1 --pretty=format:"%h"`
+          BUILD_VERSION="${TIMESTAMP}_${GITHASH}${BRANCH:+:$TAG}"
+          echo "BUILD_VERSION $BUILD_VERSION"
+          echo "TAG ${IMAGE}:${TIMESTAMP}_${GITHASH}"
+
+          docker pull influxdb:1.8
+
+          docker build --build-arg TIMESTAMP="${BUILD_VERSION}" -t ${IMAGE}:build .
+          status=$?
+          if [ $status -ne 0 ]; then
+            echo "Error: status $status"
+            exit 1
+          fi
+
+          echo " "
+          echo "Running the build container to load the data"
+
+          # start influxdb with the proper conf file
+          did=`docker run --rm -d -p 8086:8086 ${IMAGE}:build`
+          status=$?
+
+          echo "$did $status"
+
+          if [ "$status" -gt 0 ]; then
+             echo " "
+             echo "Error starting container"
+             echo "Exiting "
+             exit 1
+          fi
+
+          #allow the database to come up
+          sleep 60
+
+          curl -sl -I http://localhost:8086/ping
+          status=$?
+          if [ $status -ne 0 ]; then
+            echo "Error: influxdb ping status $status"
+            exit 1
+          fi
+
+          echo " "
+          echo "Importing data"
+          docker exec -i $did /bin/bash -c "influx -import -path=/tmp/ghi_dhi_bulkload.txt -precision s; influx -import -path=/tmp/loadprofile_measurement_out.txt -precision s"
+          status=$?
+          if [ $status -ne 0 ]; then
+            echo "Error: influxdb ping status $status"
+            exit 1
+          fi
+          
+          echo " " 
+          echo "Commiting changes to image ${IMAGE}:${TIMESTAMP}_${GITHASH}"
+          docker commit $did ${IMAGE}:${TIMESTAMP}_${GITHASH}
+          status=$?
+          if [ $status -ne 0 ]; then
+            echo "Error: commit status $status"
+            exit 1
+          fi
+          
+          echo " "
+          echo "Stop build container"
+          docker stop $did
+          status=$?
+          if [ $status -ne 0 ]; then
+            echo "Error: stop status $status"
+            exit 1
+          fi
+          
+          echo " "
+          echo "Remove the build container"
+          docker rmi ${IMAGE}:build
+          status=$?
+          if [ $status -ne 0 ]; then
+            echo "Error: stop status $status"
+            exit 1
+          fi
+          
+      - name: Push the image
+        env:
+          DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_IMAGE_NAME }}
+        if: env.DOCKER_IMAGE_NAME != null
+        run: |
+          TAG="${GITHUB_REF##*/}"
+          ORG=`echo "${{ secrets.DOCKER_PROJECT }}" | tr '[:upper:]' '[:lower:]'`
+          ORG="${ORG:-gridappsd}"
+          ORG="${ORG:+${ORG}/}"
+          IMAGE="${ORG}${{ env.DOCKER_IMAGE_NAME }}"
+          if [ -n "${{ secrets.DOCKER_USERNAME }}" -a -n "${{ secrets.DOCKER_TOKEN }}" ]; then
+          
+            if [ -n "$TAG" -a -n "$ORG" ]; then
+              # Get the built container name
+              CONTAINER=`docker images --format "{{.Repository}}:{{.Tag}}" ${IMAGE}`
+          
+              echo "docker push ${CONTAINER}"
+              docker push "${CONTAINER}"
+              status=$?
+              if [ $status -ne 0 ]; then
+                echo "Error: status $status"
+                exit 1
+              fi
+          
+              echo "docker tag ${CONTAINER} ${IMAGE}:$TAG"
+              docker tag ${CONTAINER} ${IMAGE}:$TAG
+              status=$?
+              if [ $status -ne 0 ]; then
+                echo "Error: status $status"
+                exit 1
+              fi
+          
+              echo "docker push ${IMAGE}:$TAG"
+              docker push ${IMAGE}:$TAG
+              status=$?
+              if [ $status -ne 0 ]; then
+                echo "Error: status $status"
+                exit 1
+              fi
+            fi
+          
+          fi
