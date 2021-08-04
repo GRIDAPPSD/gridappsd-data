@@ -46,7 +46,7 @@ jobs:
           echo "BUILD_VERSION $BUILD_VERSION"
           echo "TAG ${IMAGE}:${TIMESTAMP}_${GITHASH}"
 
-          docker pull influxdb:latest
+          docker pull influxdb:1.8
 
           docker build --build-arg TIMESTAMP="${BUILD_VERSION}" -t ${IMAGE}:build .
           status=$?
@@ -83,7 +83,7 @@ jobs:
 
           echo " "
           echo "Importing data"
-          docker exec -it $did /bin/bash -c "influx -import -path=/tmp/ghi_dhi_bulkload.txt -precision s; influx -import -path=/tmp/loadprofile_measurement_out.txt -precision s"
+          docker exec -i $did /bin/bash -c "influx -import -path=/tmp/ghi_dhi_bulkload.txt -precision s; influx -import -path=/tmp/loadprofile_measurement_out.txt -precision s"
           status=$?
           if [ $status -ne 0 ]; then
             echo "Error: influxdb ping status $status"
