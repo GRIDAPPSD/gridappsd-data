@@ -54,11 +54,12 @@ def strip_extra_chars(s):
         return s
 
 def create_import_header_lines(database):
-    s = "DROP DATABASE " + database + "\n"
-    s = s + "CREATE DATABASE " + database + "\n"
+    s = "# DROP DATABASE " + database + "\n"
+    s = s + "# CREATE DATABASE " + database + "\n"
     s = s + "# DML\n"
     s = s + "# CONTEXT-DATABASE: " + database + "\n"
-    s = s + "# CONTEXT-RETENTION-POLICY: autogen \n\n"
+    s = s + "# CONTEXT-RETENTION-POLICY: autogen \n"
+    s = s + "USE proven \n\n"
     return s
 
 
