@@ -35,7 +35,7 @@ Weather data available in the GridAPPS-D platform is under timeseries/weather/so
     `docker exec -t influxdb influx -import -path=ghi_dhi_bulkload.txt -precision ms`
 
 ## Custom data 
-To upload user defined custom data, 
+To upload custom weather data, execute following steps. This will replace existing weather data.
 
 1. Make a csv file using the same format as timeseries/weather/solar-forecasting/GHI_DHI_Temp_Wind_20130101_english_units_clean.csv
 
@@ -48,3 +48,4 @@ To upload user defined custom data,
 
 3. Follow the steps above to upload data 
 
+Ths will 
