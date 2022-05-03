@@ -47,5 +47,3 @@ To upload custom weather data, execute following steps. This will replace existi
     To: `raw_input_weather_file = '<custom_data_file_name>.csv'`
 
 3. Follow the steps above to upload data 
-
-Ths will 
