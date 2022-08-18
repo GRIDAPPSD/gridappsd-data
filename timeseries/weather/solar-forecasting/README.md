@@ -7,9 +7,9 @@ Steps:
 
 1. Build InfluxDB import file
    
-python3 process_weather_data.py
+   `python3 process_weather_data.py`
 
 2. Import data in InfluxDB
 
-docker exec -t influxdb influx -import -path weather_import_file.txt -precision s
+   `docker exec -t influxdb influx -import -path weather_import_file.txt -precision s`
 
