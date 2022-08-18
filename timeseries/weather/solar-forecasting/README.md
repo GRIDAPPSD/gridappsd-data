@@ -1,8 +1,15 @@
 
+Make sure influxdb is loaded.
 
-Make sure influxdb is loaded 
+To use custom weather data file, change file name in process_weather_data.py on line number 9. 
 
-To build bulkload file:  python3 build_bulk_load_file.py
+Steps:
 
-At command prompt: influx -import -path=ghi_dhi_bulkload.txt -precision ms
+1. Build InfluxDB import file
+   
+python3 process_weather_data.py
+
+2. Import data in InfluxDB
+
+docker exec -t influxdb influx -import -path weather_import_file.txt -precision s
 
