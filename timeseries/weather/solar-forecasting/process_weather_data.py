@@ -8,7 +8,7 @@ import pytz
 
 raw_input_weather_file = 'GHI_DHI_Temp_Wind_20130101_english_units_clean.csv'
 bulk_load_output_file = "weather_import_file.txt"
-measurement = "weather_default"
+measurement = "weather"
 database = "proven"
 daylight_savings_time = True
 
