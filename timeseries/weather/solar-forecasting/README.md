@@ -1,8 +1,22 @@
 
+Make sure that InfluxDB Docker container is up and running.
 
-Make sure influxdb is loaded 
+# Steps to import weather data:
 
-To build bulkload file:  python3 build_bulk_load_file.py
+1. Build InfluxDB import file
 
-At command prompt: influx -import -path=ghi_dhi_bulkload.txt -precision ms
+   `python3 process_weather_data.py`
+
+2. Copy import file inside InfluxDB Docker container
+
+   `docker cp weather_import_file.txt influxdb:/.`
+
+3. Import data in InfluxDB
+
+   `docker exec -t influxdb influx -import -path weather_import_file.txt -precision s`
+   
+# To use custom weather data:
+1. Get the weather data in a csv file.
+2. Make sure the headers and date format is same as in GHI_DHI_Temp_Wind_20130101_english_units_clean.csv.
+3. Change csv file name in process_weather_data.py on line number 9.
 

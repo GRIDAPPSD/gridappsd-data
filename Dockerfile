@@ -12,13 +12,13 @@ RUN apt-get update \
     && rm -rf /var/cache/apt/archives/*  \
     && pip3 install -r /tmp/timeseries/weather/solar-forecasting/requirements.txt  \
     && cd /tmp/timeseries/weather/solar-forecasting \
-    && python3 build_bulk_load_file.py \
+    && python3 process_weather_data.py \
     && cd /tmp/timeseries/loadprofiles \
     && python3 loadprofile_measurement_bulk.py 
 
 FROM influxdb:1.8 
 
-COPY --from=influxdbbuild /tmp/timeseries/weather/solar-forecasting/ghi_dhi_bulkload.txt /tmp/ghi_dhi_bulkload.txt
+COPY --from=influxdbbuild /tmp/timeseries/weather/solar-forecasting/weather_import_file.txt /tmp/weather_import_file.txt
 COPY --from=influxdbbuild /tmp/timeseries/loadprofiles/loadprofile_measurement_out.txt /tmp/loadprofile_measurement_out.txt
 COPY --from=influxdbbuild /dockerbuildversion.txt /dockerbuildversion.txt
 COPY ./influxdb.conf /etc/influxdb/influxdb.conf
