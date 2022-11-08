@@ -118,7 +118,6 @@ jobs:
             #echo "Error: stop status $status"
             #exit 1
           #fi
-          docker images --format "{{.Repository}}:{{.Tag}}"
           
       - name: Push the image
         env:
@@ -136,7 +135,7 @@ jobs:
           
             if [ -n "$TAG" -a -n "$ORG" ]; then
               # Get the built container name
-              CONTAINER=`docker images --format "{{.Repository}}:{{.Tag}}" ${IMAGE}`
+              CONTAINER=`docker images --format "{{.Repository}}:{{.Tag}}" ${IMAGE} | grep -v ':build$'`
           
               echo "docker push ${CONTAINER}"
               docker push "${CONTAINER}"
