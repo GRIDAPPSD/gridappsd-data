@@ -110,14 +110,14 @@ jobs:
             exit 1
           fi
           
-          echo " "
-          echo "Remove the build container"
-          docker rmi ${IMAGE}:build
-          status=$?
-          if [ $status -ne 0 ]; then
-            echo "Error: stop status $status"
-            exit 1
-          fi
+          #echo " "
+          #echo "Remove the build container"
+          #docker rmi ${IMAGE}:build
+          #status=$?
+          #if [ $status -ne 0 ]; then
+            #echo "Error: stop status $status"
+            #exit 1
+          #fi
           
       - name: Push the image
         env:
@@ -135,7 +135,7 @@ jobs:
           
             if [ -n "$TAG" -a -n "$ORG" ]; then
               # Get the built container name
-              CONTAINER=`docker images --format "{{.Repository}}:{{.Tag}}" ${IMAGE}`
+              CONTAINER=`docker images --format "{{.Repository}}:{{.Tag}}" ${IMAGE} | grep -v ':build$'`
           
               echo "docker push ${CONTAINER}"
               docker push "${CONTAINER}"
