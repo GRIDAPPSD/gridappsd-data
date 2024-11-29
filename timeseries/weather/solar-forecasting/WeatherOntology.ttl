@@ -1,0 +1,190 @@
+# baseURI: https://www.gridapps-d.org/ns#
+
+@prefix : <https://www.gridapps-d.org/ns#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix foaf: <http://xmlns.com/foaf/spec/> .
+@prefix gad: <https://www.gridapps-d.org/ns##> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+: 
+
+  rdf:type owl:Ontology ;
+  rdfs:comment "" ;
+  rdfs:label "WeatherOntology" ;
+.
+<https://www.gridapps-d.org/ns#/Field>
+  rdf:type owl:Class ;
+  rdfs:label "Field" ;
+.
+<https://www.gridapps-d.org/ns#/Location>
+  rdf:type owl:Class ;
+  rdfs:label "Location" ;
+.
+<https://www.gridapps-d.org/ns#/WeatherStation>
+  rdf:type owl:Class ;
+  rdfs:label "Weather Station" ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+      owl:onClass <https://www.gridapps-d.org/ns#/Field> ;
+      owl:onProperty <https://www.gridapps-d.org/ns#/describedby> ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:onClass <https://www.gridapps-d.org/ns#/Location> ;
+      owl:onProperty <https://www.gridapps-d.org/ns#/haslocation> ;
+      owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+    ] ;
+.
+<https://www.gridapps-d.org/ns#/cimname>
+  rdf:type owl:DatatypeProperty ;
+  rdfs:domain <https://www.gridapps-d.org/ns#/Field> ;
+  rdfs:label "cimName" ;
+.
+<https://www.gridapps-d.org/ns#/describedby>
+  rdf:type owl:ObjectProperty ;
+  rdfs:domain <https://www.gridapps-d.org/ns#/WeatherStation> ;
+  rdfs:label "describedBy" ;
+  rdfs:range <https://www.gridapps-d.org/ns#/Field> ;
+.
+<https://www.gridapps-d.org/ns#/description>
+  rdf:type owl:DatatypeProperty ;
+  rdfs:domain <https://www.gridapps-d.org/ns#/WeatherStation> ;
+  rdfs:label "description" ;
+.
+<https://www.gridapps-d.org/ns#/elevation>
+  rdf:type owl:DatatypeProperty ;
+  rdfs:domain <https://www.gridapps-d.org/ns#/Location> ;
+  rdfs:label "elevation" ;
+.
+<https://www.gridapps-d.org/ns#/elevationuom>
+  rdf:type owl:DatatypeProperty ;
+  rdfs:domain <https://www.gridapps-d.org/ns#/Location> ;
+  rdfs:label "elevationUom" ;
+.
+<https://www.gridapps-d.org/ns#/haslocation>
+  rdf:type owl:ObjectProperty ;
+  rdfs:domain <https://www.gridapps-d.org/ns#/WeatherStation> ;
+  rdfs:label "hasLocation" ;
+  rdfs:range <https://www.gridapps-d.org/ns#/Location> ;
+.
+<https://www.gridapps-d.org/ns#/lattitude>
+  rdf:type owl:DatatypeProperty ;
+  rdfs:domain <https://www.gridapps-d.org/ns#/Location> ;
+  rdfs:label "lattitude" ;
+.
+<https://www.gridapps-d.org/ns#/longitude>
+  rdf:type owl:DatatypeProperty ;
+  rdfs:domain <https://www.gridapps-d.org/ns#/Location> ;
+  rdfs:label "longitude" ;
+.
+<https://www.gridapps-d.org/ns#/mrid>
+  rdf:type owl:DatatypeProperty ;
+  rdfs:domain <https://www.gridapps-d.org/ns#/WeatherStation> ;
+  rdfs:label "mrId" ;
+.
+<https://www.gridapps-d.org/ns#/name>
+  rdf:type owl:DatatypeProperty ;
+  rdfs:domain <https://www.gridapps-d.org/ns#/WeatherStation> ;
+  rdfs:label "name" ;
+.
+<https://www.gridapps-d.org/ns#/originalname>
+  rdf:type owl:DatatypeProperty ;
+  rdfs:domain <https://www.gridapps-d.org/ns#/Field> ;
+  rdfs:label "originalName" ;
+.
+<https://www.gridapps-d.org/ns#/originalnameuom>
+  rdf:type owl:DatatypeProperty ;
+  rdfs:domain <https://www.gridapps-d.org/ns#/Field> ;
+  rdfs:label "originalNameUom" ;
+.
+<https://www.gridapps-d.org/ns#/timeseriesname>
+  rdf:type owl:DatatypeProperty ;
+  rdfs:domain <https://www.gridapps-d.org/ns#/Field> ;
+  rdfs:label "timeSeriesName" ;
+.
+<https://www.gridapps-d.org/ns#/timeseriesuom>
+  rdf:type owl:DatatypeProperty ;
+  rdfs:domain <https://www.gridapps-d.org/ns#/Field> ;
+  rdfs:label "timeSeriesUom" ;
+.
+<https://www.gridapps-d.org/ns#/timezone>
+  rdf:type owl:DatatypeProperty ;
+  rdfs:domain <https://www.gridapps-d.org/ns#/WeatherStation> ;
+  rdfs:label "timezone" ;
+.
+
+
+:Field_1
+  rdf:type <https://www.gridapps-d.org/ns#/Field> ;
+  <https://www.gridapps-d.org/ns#/originalname> "DATE (MM/DD/YYYY)" ;
+  <https://www.gridapps-d.org/ns#/originalnameuom> "MM/DD/YYYY)" ;
+  <https://www.gridapps-d.org/ns#/timeseriesname> "DATE" ;
+  <https://www.gridapps-d.org/ns#/timeseriesuom> "Epoch" ;
+.
+:Field_2
+  rdf:type <https://www.gridapps-d.org/ns#/Field> ;
+  <https://www.gridapps-d.org/ns#/originalname> "MST" ;
+  <https://www.gridapps-d.org/ns#/timeseriesname> "MST" ;
+.
+:Field_3
+  rdf:type <https://www.gridapps-d.org/ns#/Field> ;
+  <https://www.gridapps-d.org/ns#/originalname> "Global CM22 (vent/cor)" ;
+  <https://www.gridapps-d.org/ns#/originalnameuom> " [W/ft^2]" ;
+  <https://www.gridapps-d.org/ns#/timeseriesname> "GlobalCM22" ;
+.
+:Field_4
+  rdf:type <https://www.gridapps-d.org/ns#/Field> ;
+  <https://www.gridapps-d.org/ns#/originalname> "Direct CH1 [W/ft^2]" ;
+  <https://www.gridapps-d.org/ns#/originalnameuom> "W/ft^2" ;
+  <https://www.gridapps-d.org/ns#/timeseriesname> "DirectCH1" ;
+.
+:Field_5
+  rdf:type <https://www.gridapps-d.org/ns#/Field> ;
+  <https://www.gridapps-d.org/ns#/originalname> "Diffuse CM22 (vent/cor)" ;
+  <https://www.gridapps-d.org/ns#/originalnameuom> "W/ft^2" ;
+  <https://www.gridapps-d.org/ns#/timeseriesname> "Diffuse" ;
+.
+:Field_6
+  rdf:type <https://www.gridapps-d.org/ns#/Field> ;
+  <https://www.gridapps-d.org/ns#/originalname> "Tower Dry Bulb Temp" ;
+  <https://www.gridapps-d.org/ns#/originalnameuom> "deg F" ;
+  <https://www.gridapps-d.org/ns#/timeseriesname> "TowerDryBulbTemp" ;
+.
+:Field_7
+  rdf:type <https://www.gridapps-d.org/ns#/Field> ;
+  <https://www.gridapps-d.org/ns#/originalname> "Tower RH" ;
+  <https://www.gridapps-d.org/ns#/originalnameuom> "%" ;
+  <https://www.gridapps-d.org/ns#/timeseriesname> "TowerRH" ;
+.
+:Field_8
+  rdf:type <https://www.gridapps-d.org/ns#/Field> ;
+  <https://www.gridapps-d.org/ns#/originalname> "Avg Wind Speed @ 42ft" ;
+  <https://www.gridapps-d.org/ns#/originalnameuom> "MPH" ;
+  <https://www.gridapps-d.org/ns#/timeseriesname> "AveWindSpeed" ;
+.
+:Field_9
+  rdf:type <https://www.gridapps-d.org/ns#/Field> ;
+  <https://www.gridapps-d.org/ns#/originalname> "Ave Wind Direction @ 42ft" ;
+  <https://www.gridapps-d.org/ns#/originalnameuom> "deg from N" ;
+  <https://www.gridapps-d.org/ns#/timeseriesname> "AvgWindDirection" ;
+.
+:Location_1
+  rdf:type <https://www.gridapps-d.org/ns#/Location> ;
+  <https://www.gridapps-d.org/ns#/elevation> "1829" ;
+  <https://www.gridapps-d.org/ns#/elevationuom> "Meters" ;
+  <https://www.gridapps-d.org/ns#/lattitude> "39.74 N" ;
+  <https://www.gridapps-d.org/ns#/longitude> "105.18 W" ;
+.
+:WeatherStation_1
+  rdf:type <https://www.gridapps-d.org/ns#/WeatherStation> ;
+  <https://www.gridapps-d.org/ns#/haslocation> :Location_1 ;
+  <https://www.gridapps-d.org/ns#/mrid> "8bf40d3f-bd94-4ae7-beda-305bd409485a" ;
+  <https://www.gridapps-d.org/ns#/name> "Solar Radiation Research Laboratory" ;
+  <https://www.gridapps-d.org/ns#/timezone> "Time Zone GMT-7 (MST)" ;
+.
