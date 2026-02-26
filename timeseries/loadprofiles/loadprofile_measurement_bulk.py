@@ -7,8 +7,8 @@ Created on Oct 8, 2019
 import time
 import os
 
-raw_input_file = "ieeezipload.player"
-measurement = "ieeezipload"
+raw_input_file = "ieeezipload_monthly.player"
+measurement = "ieeezipload_monthly"
 bulk_load_output_file = "loadprofile_measurement_out.txt"
 database = "proven"
 
@@ -34,11 +34,11 @@ def strip_extra_chars(s):
 
 bulkload_file = bulk_load_output_file
 fo = open(bulkload_file,'w')
-fo.write(create_import_header_lines(database) + "\n")
+#fo.write(create_import_header_lines(database) + "\n")
 
 epoch_index = seed_epoch_date
 
-for day in range(1,366):
+for day in range(1,13):
      with open(raw_input_file) as fp:
           line = fp.readline()
           while line:
